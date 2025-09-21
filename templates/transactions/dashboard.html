@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <!-- Chap panel -->
+  <div class="col-lg-8">
+    <div class="card shadow-sm p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">📊 Umumiy statistika</h5>
+        <a href="{% url 'transactions:reports' %}" class="btn btn-sm btn-outline-primary">Toʻliq hisobot</a>
+      </div>
+
+      <!-- Statistika -->
+      <div class="row text-center">
+        <div class="col-4">
+          <small class="text-muted">Kirim</small>
+          <div class="fs-4 fw-bold text-success">
+            {{ summary.income_total|default:"0" }}
+          </div>
+          <small class="text-muted">{{ summary.income_percent|default:"0" }}%</small>
+        </div>
+        <div class="col-4">
+          <small class="text-muted">Chiqim</small>
+          <div class="fs-4 fw-bold text-danger">
+            {{ summary.expense_total|default:"0" }}
+          </div>
+          <small class="text-muted">{{ summary.expense_percent|default:"0" }}%</small>
+        </div>
+        <div class="col-4">
+          <small class="text-muted">Balans</small>
+          <div class="fs-4 fw-bold">
+            {{ summary.balance|default:"0" }}
+          </div>
+          <small class="text-muted">Umumiy balans</small>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Grafik va tranzaksiyalar -->
+      <div class="row">
+        <div class="col-md-6">
+          <canvas id="incExpChart" height="200"></canvas>
+        </div>
+        <div class="col-md-6">
+          <h6>📝 Soʻnggi tranzaksiyalar</h6>
+          <ul class="list-group small">
+            {% for t in recent %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="fw-bold">{{ t.get_t_type_display }}</span> —
+                  {% if t.category %}
+                    {{ t.category.name }}
+                  {% else %}
+                    <span class="text-muted">Kategoriya yo‘q</span>
+                  {% endif %}
+                  <div class="text-muted">
+                    {{ t.date }} • {{ t.payment_method }}
+                  </div>
+                </div>
+                <div class="{% if t.t_type == 'income' %}text-success{% else %}text-danger{% endif %}">
+                  {{ t.amount }} {{ t.currency }}
+                </div>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">Tranzaksiya topilmadi</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔎 Quick filters -->
+    <div class="card shadow-sm p-3 mt-3">
+      <h6>🔎 Filtrlar</h6>
+      <form method="get" class="row g-2">
+        <div class="col-md-3">
+          <input type="date" name="start" class="form-control" value="{{ request.GET.start }}">
+        </div>
+        <div class="col-md-3">
+          <input type="date" name="end" class="form-control" value="{{ request.GET.end }}">
+        </div>
+        <div class="col-md-3">
+          <select name="currency" class="form-select">
+            <option value="">Barchasi</option>
+            <option value="UZS" {% if request.GET.currency == 'UZS' %} selected{% endif %}>UZS</option>
+            <option value="USD" {% if request.GET.currency == 'USD' %} selected{% endif %}>USD</option>
+          </select>
+        </div>
+        <div class="col-md-3 text-end">
+          <button class="btn btn-primary">Filtrlash</button>
+          <a href="{% url 'transactions:transaction_create' %}" class="btn btn-success">+ Yangi</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('incExpChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Kirim', 'Chiqim'],
+      datasets: [{
+        data: [{{ summary.income_total|default:0 }}, {{ summary.expense_total|default:0 }}],
+        backgroundColor: ['#28a745', '#dc3545']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+</script>
+{% endblock %}

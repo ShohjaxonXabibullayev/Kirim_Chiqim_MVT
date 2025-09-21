@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Kirish{% endblock %}
+{% block content %}
+<h2>Kirish</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success">Kirish</button>
+</form>
+<p><a href="{% url 'accounts:forgot_password' %}">Parolni unutdingizmi?</a></p>
+{% endblock %}

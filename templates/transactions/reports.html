@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}Hisobotlar{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="card card-compact p-3">
+      <h5>Davriy hisobot</h5>
+      <form method="get" class="row g-2">
+        <div class="col-md-4">
+          <input type="date" name="start" class="form-control" value="{{ request.GET.start }}">
+        </div>
+        <div class="col-md-4">
+          <input type="date" name="end" class="form-control" value="{{ request.GET.end }}">
+        </div>
+        <div class="col-md-4 text-end">
+          <button class="btn btn-primary">Ko'rsat</button>
+        </div>
+      </form>
+
+      <hr>
+      <div class="row">
+        <div class="col-md-6 text-center">
+          <h6>Kirim bo‘yicha</h6>
+          <canvas id="incomeChart" height="200"></canvas>
+        </div>
+        <div class="col-md-6 text-center">
+          <h6>Chiqim bo‘yicha</h6>
+          <canvas id="expenseChart" height="200"></canvas>
+        </div>
+      </div>
+
+      <hr>
+      <h6>Daromad tafsiloti</h6>
+      <table class="table">
+        <thead>
+          <tr><th>Kategoriya</th><th>Summa</th><th>Foiz</th></tr>
+        </thead>
+        <tbody>
+          {% for row in data.income_by_cat %}
+            <tr><td>{{ row.category__name }}</td><td>{{ row.total }}</td><td>{{ row.percent }} %</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <h6>Chiqim tafsiloti</h6>
+      <table class="table">
+        <thead>
+          <tr><th>Kategoriya</th><th>Summa</th><th>Foiz</th></tr>
+        </thead>
+        <tbody>
+          {% for row in data.expense_by_cat %}
+            <tr><td>{{ row.category__name }}</td><td>{{ row.total }}</td><td>{{ row.percent }} %</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card card-compact p-3">
+      <h6>Summary</h6>
+      <div>Kirim: <strong>{{ data.summary.income_total }}</strong></div>
+      <div>Chiqim: <strong class="text-danger">{{ data.summary.expense_total }}</strong></div>
+      <div>Balans: <strong class="text-success">{{ data.summary.balance }}</strong></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Income data
+  const incomeLabels = [
+    {% for row in data.income_by_cat %}
+      "{{ row.category__name }}"{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  const incomeData = [
+    {% for row in data.income_by_cat %}
+      {{ row.total }}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  // Expense data
+  const expenseLabels = [
+    {% for row in data.expense_by_cat %}
+      "{{ row.category__name }}"{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+  const expenseData = [
+    {% for row in data.expense_by_cat %}
+      {{ row.total }}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ];
+
+  new Chart(document.getElementById('incomeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: incomeLabels,
+      datasets: [{
+        data: incomeData,
+        backgroundColor: ['#36A2EB','#4BC0C0','#9966FF','#FF6384','#FF9F40','#FFCD56']
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('expenseChart'), {
+    type: 'doughnut',
+    data: {
+      labels: expenseLabels,
+      datasets: [{
+        data: expenseData,
+        backgroundColor: ['#FF6384','#FF9F40','#FFCD56','#36A2EB','#4BC0C0','#9966FF']
+      }]
+    }
+  });
+</script>
+{% endblock %}
+

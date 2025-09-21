@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Profilni tahrirlash{% endblock %}
+{% block content %}
+<div class="card p-3">
+  <h5>Profilni yangilash</h5>
+  <form method="post">{% csrf_token %}
+    <div class="mb-2"><label>Username</label><input class="form-control" name="username" value="{{ user.username }}"></div>
+    <div class="mb-2"><label>Email</label><input class="form-control" name="email" value="{{ user.email }}"></div>
+    <div class="mb-2"><label>Telefon</label><input class="form-control" name="phone" value="{{ user.phone }}"></div>
+    <div class="mb-2"><label>Ism</label><input class="form-control" name="first_name" value="{{ user.first_name }}"></div>
+    <div class="mb-2"><label>Familiya</label><input class="form-control" name="last_name" value="{{ user.last_name }}"></div>
+    <button class="btn btn-primary">Saqlash</button>
+  </form>
+</div>
+{% endblock %}

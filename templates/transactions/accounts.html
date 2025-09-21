@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Hisoblar{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4>Hisoblar</h4>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">Yangi hisob</button>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Valyuta</th>
+      <th>Balans</th>
+      <th>Amallar</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in accounts %}
+    <tr>
+      <td>{{ a.name }}</td>
+      <td>{{ a.currency }}</td>
+      <td>{{ a.initial_balance }}</td>
+      <td>
+        <a href="{% url 'transactions:account_edit' a.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4" class="text-center">Hisoblar yo'q</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Modal: add account -->
+<div class="modal fade" id="addAccountModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'transactions:account_create' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Yangi hisob</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Nom</label>
+            <input name="name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Valyuta</label>
+            <select name="currency" class="form-control">
+              <option value="UZS">UZS</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Boshlang'ich balans</label>
+            <input name="initial_balance" class="form-control" type="number" step="0.01" value="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Bekor qilish</button>
+          <button type="submit" class="btn btn-primary">Qo'shish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

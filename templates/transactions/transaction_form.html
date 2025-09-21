@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Yangi tranzaksiya{% endblock %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm border-0 rounded-3">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">{% if form.instance.pk %}Tranzaksiyani tahrirlash{% else %}Yangi tranzaksiya{% endif %}</h5>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label">{{ form.date.label }}</label>
+            {{ form.date|add_class:"form-control" }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ form.t_type.label }}</label>
+            {{ form.t_type|add_class:"form-select" }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ form.payment_method.label }}</label>
+            {{ form.payment_method|add_class:"form-select" }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">{{ form.currency.label }}</label>
+            {{ form.currency|add_class:"form-select" }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ form.amount.label }}</label>
+            {{ form.amount|add_class:"form-control" }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ form.account.label }}</label>
+            {{ form.account|add_class:"form-select" }}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">{{ form.category.label }}</label>
+            {{ form.category|add_class:"form-select" }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">{{ form.note.label }}</label>
+            {{ form.note|add_class:"form-control" }}
+          </div>
+        </div>
+        <div class="mt-4 d-flex justify-content-end gap-2">
+          <a href="{% url 'transactions:transaction_list' %}" class="btn btn-outline-secondary">Bekor</a>
+          <button class="btn btn-success">💾 Saqlash</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

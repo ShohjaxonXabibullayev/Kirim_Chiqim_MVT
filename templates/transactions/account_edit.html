@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Account tahrirlash{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h3>Account tahrirlash</h3>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-2">
+      <label for="id_name">Nomi</label>
+      <input type="text" id="id_name" name="name" value="{{ account.name }}" class="form-control">
+    </div>
+    <div class="mb-2">
+        <label for="id_initial_balance">Balans</label>
+        <input type="number" id="id_initial_balance" name="initial_balance" value="{{ account.initial_balance }}" class="form-control">
+    </div>
+
+    <button class="btn btn-primary mt-2">Saqlash</button>
+    <a href="{% url 'transactions:accounts' %}" class="btn btn-secondary mt-2">Bekor qilish</a>
+  </form>
+</div>
+{% endblock %}

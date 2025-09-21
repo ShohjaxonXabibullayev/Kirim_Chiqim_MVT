@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Transactions{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h4>Tranzaksiyalar</h4>
+  <div>
+    <a class="btn btn-outline-secondary btn-sm" href="?type=income">Income</a>
+    <a class="btn btn-outline-secondary btn-sm" href="?type=expense">Expense</a>
+    <a class="btn btn-primary btn-sm" href="{% url 'transactions:transaction_create' %}">Yangi</a>
+  </div>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-3"><input type="date" name="start" class="form-control" value="{{ request.GET.start }}"></div>
+  <div class="col-md-3"><input type="date" name="end" class="form-control" value="{{ request.GET.end }}"></div>
+  <div class="col-md-2">
+    <select name="type" class="form-control">
+      <option value="">Barchasi</option>
+      <option value="income" {% if request.GET.type == 'income' %}selected{% endif %}>Kirim</option>
+      <option value="expense" {% if request.GET.type == 'expense' %}selected{% endif %}>Chiqim</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="account" class="form-control">
+      <option value="">Hisob</option>
+      {% for a in accounts %}
+        <option value="{{ a.id }}" {% if request.GET.account == a.id|stringformat:"s" %}selected{% endif %}>
+          {{ a.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2 text-end"><button class="btn btn-primary">Filtrlash</button></div>
+</form>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Sana</th><th>Turi</th><th>Kategoriya</th><th>Hisob</th><th>To'lov</th><th>Summa</th><th>Amallar</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in transactions %}
+    <tr>
+      <td>{{ t.date }}</td>
+      <td>{{ t.get_t_type_display }}</td>
+      <td>
+        {% if t.category %}
+          {{ t.category.name }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>
+        {% if t.account %}
+          {{ t.account.name }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>{{ t.get_payment_method_display }}</td>
+      <td class="{% if t.t_type == 'income' %}text-success{% else %}text-danger{% endif %}">
+        {{ t.amount }} {{ t.currency }}
+      </td>
+      <td>
+        <a href="{% url 'transactions:transaction_update' t.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+        <a href="{% url 'transactions:transaction_delete' t.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="7">Tranzaksiya yoʻq</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

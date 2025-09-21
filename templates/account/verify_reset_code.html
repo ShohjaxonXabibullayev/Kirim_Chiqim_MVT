@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Kod tasdiqlash{% endblock %}
+{% block content %}
+<div class="card p-3">
+  <h5>Tasdiqlash kodi</h5>
+  <form method="post">
+    {% csrf_token %}
+    <input type="text" name="code" class="form-control mb-2" placeholder="4 xonali kodni kiriting" required>
+    <button class="btn btn-success">Tasdiqlash</button>
+  </form>
+</div>
+{% endblock %}
