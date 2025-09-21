@@ -66,4 +66,3 @@ pip install -r requirements.txt
 
 👉 Brauzerda ochish: http://127.0.0.1:8000
 
-postman documentation 👉https://documenter.getpostman.com/view/47098717/2sB3HtFc2r
