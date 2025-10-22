@@ -1,6 +1,6 @@
 💰 Kirim-Chiqim Dasturi (Expense Tracker)
 
-Kirim-Chiqim dasturi — bu foydalanuvchilarga o‘z mablag‘larini nazorat qilish, xarajat va daromadlarni kuzatib borish, hisoblarni boshqarish va moliyaviy intizomni shakllantirish uchun mo‘ljallangan veb-ilova.
+Kirim-Chiqim dasturi — bu foydalanuvchilarga o‘z mablag‘larini nazorat qilish, xarajat va daromadlarni kuzatib borish, hisoblarni boshqarish va moliyaviy intizomni shakllantirish uchun mo‘ljallangan veb-sayt.
 
 Hozirgi davrda ko‘plab odamlar mablag‘larini qayerga sarflayotganini bilmaydi yoki uni kuzatib borish qiyin bo‘ladi. Shu muammoni hal qilish uchun ushbu dastur ishlab chiqildi.
 
